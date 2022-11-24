@@ -11,6 +11,8 @@
     </div>
     <div>
       <button @click="HVIRecap()">Obtener Recap</button>
+      <br>
+      <button @click="test()">TEST</button>
     </div>
 
     <button v-if="datos" v-on:click="probarExcel()" class=" h-16 w-16 bg-blue-600">Exportar datos</button>
@@ -25,7 +27,7 @@
           <th class="w-32">UI</th>
           <th class="w-32">Strength</th>
           <th class="w-32">SFI</th>
-          <th class="w-32">MIC</th>
+          <th class="w-32">Mic</th>
           <th class="w-32">ColorGrade</th>
           <th class="w-32">TrashID</th>
         </tr>
@@ -93,7 +95,7 @@ export default {
               return { UHML, UI, STRENGTH, SFI, MIC, COLORGRADE, TRASHID };
             });
             self.items = restX2;
-            //console.log(self.items)
+            console.log(self.items)      
           });
         }
       }
@@ -106,15 +108,13 @@ export default {
       };
       axios.post('http://localhost:8000/api/HVI', jsons).then(res => {
         console.log(res);
-        //console.log(jsons)
         if (res.status === 200) alert("Se enviaron los datos correctamente.");
       });
-    },    
+    },  
 
-    generarRecap() {
-      router.push("/recap")
+    test(){
+      console.log(self.items)
     }
   }
-
 }
 </script>
