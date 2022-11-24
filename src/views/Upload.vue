@@ -10,6 +10,7 @@
         v-on:change="imporExcel($event)">
     </div>
     <div>
+      <input v-model="FileName" type="text"/>
       <button @click="HVIRecap()">Obtener Recap</button>
       <br>
       <button @click="test()">TEST</button>
@@ -55,6 +56,7 @@ import router from "@/router/index.js";
 export default {
   data: () => ({
     items: [],
+    FileName: '',
     datos: false,
     recap: false
   }),
@@ -104,11 +106,14 @@ export default {
     HVIRecap() {
       let self = this;
       let jsons = {
-        HVIList : self.items
+        HVIList : self.items,
+        Title: self.FileName
       };
+
       axios.post('http://localhost:8000/api/HVI', jsons).then(res => {
         console.log(res);
         if (res.status === 200) alert("Se enviaron los datos correctamente.");
+        location.reload()
       });
     },  
 
