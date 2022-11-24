@@ -87,12 +87,14 @@ export default {
               let UI = x['UI'];
               let STRENGTH = x['Strength'];
               let SFI = x['SFI'];
-              let MIC = x['Mic'];
+              let MIC = x['MIC'];
               let COLORGRADE = x['ColorGrade'];
               let TRASHID = x['TrashID'];
               return { UHML, UI, STRENGTH, SFI, MIC, COLORGRADE, TRASHID };
             });
             self.items = restX2;
+            console.log(self.items)
+            
          
           });
         }
@@ -105,7 +107,8 @@ export default {
         HVIList : self.items
       };
       axios.post('http://localhost:8000/api/HVI',jsons).then(res => {
-        console.log(res);
+        //console.log(res);
+        console.log(jsons)
         if (res.status === 200) alert("Se enviaron los datos correctamente.");
       });
     },    
