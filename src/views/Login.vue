@@ -49,6 +49,7 @@
 
 <script>
 import router from "@/router/index.js";
+import axios from "axios"
 export default{
   
   data: () => ({
@@ -64,13 +65,20 @@ export default{
                 userPassword: this.userPassword
             }
 
-             fetch('http://localhost:8000/api/User/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                credentials: 'include',
-                body: JSON.stringify(jsonDatos)
-            });            
-         //router.push("Upload")
+            let url = 'http://localhost:8000/api/User/login'
+            let data = jsonDatos
+            let config = {
+              headers:{'Content-Type': 'application/json'},
+              withCredentials: true
+            }
+
+            axios.post(url, data, config).then(res =>{
+                console.log(res);
+                if(res.status === 200){
+                    alert('Login exitoso')
+                    router.push("Upload")
+                }
+            })
         }
   }
      
