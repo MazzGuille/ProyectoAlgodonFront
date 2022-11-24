@@ -59,7 +59,7 @@ export default{
         
   methods:{
       iniciarSesion(){
-            let jsonDatos = {
+                let jsonDatos = {
                 email : this.email,
                 userPassword: this.userPassword
             }
@@ -70,7 +70,7 @@ export default{
                 credentials: 'include',
                 body: JSON.stringify(jsonDatos)
             });            
-         router.push("Upload")
+         //router.push("Upload")
         }
   }
      
