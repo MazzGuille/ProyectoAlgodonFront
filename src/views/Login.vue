@@ -50,6 +50,8 @@
 <script>
 import router from "@/router/index.js";
 import axios from "axios"
+import Swal from 'sweetalert2'
+
 export default{
   
   data: () => ({
@@ -71,7 +73,7 @@ export default{
               headers:{'Content-Type': 'application/json'},
               withCredentials: true
             }
-
+            
             axios.post(url, data, config).then(res =>{
                 console.log(res);
                 if(res.status === 200){
@@ -79,6 +81,20 @@ export default{
                     router.push("Upload")
                 }
             })
+        },
+        
+        checkValidation(){
+          if(!this.email){
+            this.$refs.email.focus();
+            Swal.fire('El campo email es requerido');
+            return;
+          }
+           if(!this.userPassword){
+            this.$refs.userPassword.focus();
+            Swal.fire('El campo contrseña es requerido');
+            return;
+          }
+          return true;
         }
   }
      

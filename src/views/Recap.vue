@@ -1,6 +1,10 @@
 <template>
     <h1>recap</h1>
     <br>
+    <button v-on:click="fillArray()">
+      test recap
+    </button>
+    <br>
      <div class="flex items-start justify-center h-screen">
     <table class="table w-3/4 text-center">   
     <thead>
@@ -95,3 +99,41 @@
   </table>
    </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+//Creamos variables y un array vacio con al finalidad de popular el array con los datos traidos de la DB
+export default {
+    data: () => ({
+    hvi: [],
+    UHML: '',
+    UI: '',
+    STRENGTH: '',
+    SFI: '',
+    MIC: '',
+    COLORGRADE: '',
+    TRASHID: ''
+  }),
+
+  methods: {
+    fillArray(){
+      let json = { //almacenamos todos los datos en un variable "json"
+        Uhml : this.UHML,
+        Ui : this.UI,
+        Strength : this.STRENGTH,
+        Sfi : this.SFI,
+        Mic : this.MIC,
+        ColorGrade : this.COLORGRADE,
+        TrashId : this.TRASHID
+      }
+
+      this.hvi = json //usamos el array vacio y lo llenamos con los datos que almacenamos en la variable "json"
+
+      axios.get('http://localhost:8000/api/Recap', this.hvi).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
+        console.log(res); //imprimimos el array por consola
+      })
+    }
+  }
+}
+</script>
