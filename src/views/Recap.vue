@@ -139,16 +139,25 @@ export default {
       axios.get('http://localhost:8000/api/Recap', json).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
         this.hvi = res.data;
         //console.log(this.hvi); //imprimimos el array por consola
-        this.hvi.map(x => {
-          if(x.uhml >= '1.27' && x.uhml <= '1.29' ){
-           this.uhml1 = x.uhml.length;
-           console.log(x.uhml.length);
-           console.log(this.uhml1);;
+        // this.hvi.map(x => {
+        //   console.log(x);
+        //   if(x.uhml >= '1.27' && x.uhml <= '1.29' ){
+        //    this.uhml1 = x.uhml.length;
+        //   }
+        // });
+
+        const uhml_d = this.hvi.map(x => x.uhml);
+        console.log(uhml_d);
+
+        const total_uhml = uhml_d.forEach(item =>{
+          if(item >= 1.27 && item <= 1.29){
+            return item;
           }
         });
+        console.log(total_uhml)
 
       });
-      
+
     }
   }
 }
