@@ -153,7 +153,6 @@ export default {
         const uhml_d = this.hvi; 
         // let arr;
         // let uhml;
-
         // filtradoValores(arr, uhml_d, uhml, uhml1, 1.27, 1.29)
 
         let arr = uhml_d.filter((x) =>{
