@@ -33,7 +33,9 @@
           {{ uhml1 }}
         </td>
         <td>3.0 - 10.9</td>                     
-        <td></td>
+        <td>
+          {{ ui1 }}
+        </td>
         <td>70.0 - 70.9</td>                     
         <td></td> 
         <td>17.0 - 17.9</td>                    
@@ -119,7 +121,8 @@ export default {
     MIC: '',
     COLORGRADE: '',
     TRASHID: '',
-    uhml1: 'agua'
+    uhml1: 0,
+    ui1: 0
   }),
 
   methods: {
@@ -134,30 +137,35 @@ export default {
         TrashId : this.TRASHID
       }
 
+      // let filtradoValores = (a,b,c,d,y,z) =>{
+      //   a = b.filter((x) =>{
+      //     return x.c >= y && x.c <= z
+      //   })
+      //   var e = a.length
+      //   this.d = e
+      //   return this.d
+      // }
+
       //this.hvi = json //usamos el array vacio y lo llenamos con los datos que almacenamos en la variable "json"
 
       axios.get('http://localhost:8000/api/Recap', json).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
         this.hvi = res.data;
-        //console.log(this.hvi); //imprimimos el array por consola
-        // this.hvi.map(x => {
-        //   console.log(x);
-        //   if(x.uhml >= '1.27' && x.uhml <= '1.29' ){
-        //    this.uhml1 = x.uhml.length;
-        //   }
-        // });
+        const uhml_d = this.hvi; 
+        // let arr;
+        // let uhml;
 
-        const uhml_d = this.hvi.map(x => x.uhml);
-        console.log(uhml_d);
+        // filtradoValores(arr, uhml_d, uhml, uhml1, 1.27, 1.29)
 
-        const total_uhml = uhml_d.forEach(item =>{
-          if(item >= 1.27 && item <= 1.29){
-            return item;
-          }
-        });
-        console.log(total_uhml)
+        let arr = uhml_d.filter((x) =>{
+         return x.uhml >= 1.27 && x.uhml <= 1.29
+        })
+        this.uhml1 = arr.length        
 
+        let arr2 = uhml_d.filter((x) => {
+          return x.ui >= 83.0 && x.ui <= 84.9
+        })
+        this.ui1 = arr2.length
       });
-
     }
   }
 }
