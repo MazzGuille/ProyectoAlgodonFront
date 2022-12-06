@@ -5,9 +5,13 @@
       test recap
     </button>
     <br>
-    <!-- <div>
-      {{hvi}}
-    </div> -->
+     <button v-on:click="testeandolo()">
+      sumatoria
+    </button>
+    <br>
+    <div>
+      {{sumatoria}}
+    </div>
      <div class="flex items-start justify-center h-screen">
     <table class="table w-3/4 text-center">   
     <thead>
@@ -122,7 +126,8 @@ export default {
     COLORGRADE: '',
     TRASHID: '',
     uhml1: 0,
-    ui1: 0
+    ui1: 0,
+    sumatoria: 0
   }),
 
   methods: {
@@ -137,35 +142,44 @@ export default {
         TrashId : this.TRASHID
       }
 
-      // let filtradoValores = (a,b,c,d,y,z) =>{
-      //   a = b.filter((x) =>{
-      //     return x.c >= y && x.c <= z
-      //   })
-      //   var e = a.length
-      //   this.d = e
-      //   return this.d
-      // }
+      let metodoArray = (a, b, c, y, z) =>{
+        a = b.filter((x) =>{
+          return x.c >= y && x.c <= z
+        })
+        return a.length
+      }
+
+      let filtradoValores = (a, b) =>{
+       return a = b
+      }      
 
       //this.hvi = json //usamos el array vacio y lo llenamos con los datos que almacenamos en la variable "json"
 
       axios.get('http://localhost:8000/api/Recap', json).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
-        this.hvi = res.data;
-        const uhml_d = this.hvi; 
-        // let arr;
-        // let uhml;
-        // filtradoValores(arr, uhml_d, uhml, uhml1, 1.27, 1.29)
+        this.hvi = res.data;     
 
-        let arr = uhml_d.filter((x) =>{
-         return x.uhml >= 1.27 && x.uhml <= 1.29
-        })
-        this.uhml1 = arr.length        
+      //   let arr = this.hvi.filter((x) =>{
+      //    return x.uhml >= 1.27 && x.uhml <= 1.29
+      //   })
+      //   this.uhml1 = arr.length        
 
-        let arr2 = uhml_d.filter((x) => {
-          return x.ui >= 83.0 && x.ui <= 84.9
-        })
-        this.ui1 = arr2.length
-      });
-    }
+      //   let arr2 = this.hvi.filter((x) => {
+      //     return x.ui >= 83.0 && x.ui <= 84.9
+      //   })
+      //   this.ui1 = arr2.length
+       });
+
+      filtradoValores(this.uhml1)
+        console.log(this.uhml1);
+    },
+
+    // testeandolo(){
+    //   let sum = (a,b) =>{
+    //     return a + b
+    //   }
+
+    //   this.sumatoria = sum(4,8)
+    // }
   }
 }
 </script>
