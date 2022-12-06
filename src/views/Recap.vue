@@ -141,12 +141,14 @@ export default {
         //console.log(this.hvi); //imprimimos el array por consola
         this.hvi.map(x => {
           if(x.uhml >= '1.27' && x.uhml <= '1.29' ){
-           this.uhml1 = x.uhml.length
-           console.log(this.uhml1);
+           this.uhml1 = x.uhml.length;
+           console.log(x.uhml.length);
+           console.log(this.uhml1);;
           }
-        })
+        });
 
-      })
+      });
+      
     }
   }
 }
