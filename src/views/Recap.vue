@@ -5,6 +5,9 @@
       test recap
     </button>
     <br>
+    <!-- <div>
+      {{hvi}}
+    </div> -->
      <div class="flex items-start justify-center h-screen">
     <table class="table w-3/4 text-center">   
     <thead>
@@ -26,7 +29,9 @@
     <tbody>
       <tr>
         <td>0.80 - 0.85</td>
-        <td></td>
+        <td>
+          {{this.uhml1}}
+        </td>
         <td>3.0 - 10.9</td>                     
         <td></td>
         <td>70.0 - 70.9</td>                     
@@ -113,7 +118,8 @@ export default {
     SFI: '',
     MIC: '',
     COLORGRADE: '',
-    TRASHID: ''
+    TRASHID: '',
+    uhml1: 'agua'
   }),
 
   methods: {
@@ -128,10 +134,18 @@ export default {
         TrashId : this.TRASHID
       }
 
-      this.hvi = json //usamos el array vacio y lo llenamos con los datos que almacenamos en la variable "json"
+      //this.hvi = json //usamos el array vacio y lo llenamos con los datos que almacenamos en la variable "json"
 
-      axios.get('http://localhost:8000/api/Recap', this.hvi).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
-        console.log(res); //imprimimos el array por consola
+      axios.get('http://localhost:8000/api/Recap', json).then(res => { //usando axios, llamamos a la API correspondiente colocamos como paramentro, el array
+        this.hvi = res.data;
+        //console.log(this.hvi); //imprimimos el array por consola
+        this.hvi.map(x => {
+          if(x.uhml >= '1.27' && x.uhml <= '1.29' ){
+           this.uhml1 = x.uhml.length
+           console.log(this.uhml1);
+          }
+        })
+
       })
     }
   }
