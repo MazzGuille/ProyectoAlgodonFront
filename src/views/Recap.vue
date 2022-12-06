@@ -30,7 +30,7 @@
       <tr>
         <td>0.80 - 0.85</td>
         <td>
-          {{this.uhml1}}
+          {{ uhml1 }}
         </td>
         <td>3.0 - 10.9</td>                     
         <td></td>
