@@ -34,7 +34,7 @@
         <th class= "w-32"> TOTAL </th>
       </tr>
     </thead>
-    <tbody >
+    <tbody v-if="!isTableEmpty">
       <tr v-for="(items, index) in baseArr" :key="index">
         <td>{{items[0].T1}}</td>
         <td>{{items[0].D1}}</td>
@@ -50,13 +50,19 @@
         <td>{{items[0].D6}}</td>
       </tr>
     </tbody>
-  </table>
+    <div v-show="rendering" v-else class=" ml-auto mr-auto w-full h-full flex justify-center items-center">
+     <svg aria-hidden="true" class="w-20 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+     </svg>
+    </div>
+    </table>
+    
 </div>
 </template>
 
 <script>
 import axios from 'axios';
-import exportXlsFile from "export-from-json"
 
 export default {
     data: () => ({
@@ -75,13 +81,13 @@ export default {
     sfiTotal:[],
     micTotal:[],
     clrTotal:[],
-    sumatoria: '',
+    rendering: false,
     agua: 'agua'
   }),
 
   methods: {
     fillArray(){      
-
+      this.rendering = true
       axios.get('http://localhost:8000/api/Recap').then(res => { 
         this.hvi = res.data;  
        
@@ -162,474 +168,55 @@ export default {
            T4: `${this.SFI[tt1]} - ${this.SFI[tt2]}`, D4: this.sfiTotal[dd], 
            T5: this.MIC[tt3], D5: this.micTotal[dd], 
            T6: this.CLR[tt3], D6: this.clrTotal[dd] 
-          }         
-          ]                  
+          }]              
+                
           this.baseArr.push(baseArrFill )
+          //   if(this.uhmlTotal[dd] === 99999){
+          //   this.baseArr[tt3][0].T1 = `${this.SFI[tt1]} +`            
+          // }
+           if(typeof this.uhmlTotal[dd] === "undefined"){
+           this.baseArr[tt3][0].T1 = ''            
+          }
+
+            if(typeof this.uiTotal[dd] === "undefined"){                       
+            this.baseArr[tt3][0].T2 = ''
+          }
+
+            if(typeof this.strTotal[dd] === "undefined"){                       
+            this.baseArr[tt3][0].T3 = ''
+          }
+
+          if(typeof this.sfiTotal[dd] === "undefined"){                       
+            this.baseArr[tt3][0].T4 = ''
+          }
           tt1+=2
           tt2+=2
           tt3++
           dd++
         }
-         if(this.UH[tt1] === 'undefined' || this.UH[tt2] === 'undefined'){
-            this.UH[tt1] = ''
-            this.UH[tt2] = ''
-          } 
-        console.log(this.micTotal);    
+        
+          
        });    
     },
 
-    exportarExcel(){
-      const data = this.baseArr
-      const FileName = 'descarga'
-      const exportType = exportXlsFile.types.xls
-      exportXlsFile({data, FileName, exportType})
-    },
-
     testeandolo(){
-        this.baseArrFill = [{}]
-        var i;
-        var tt1 = 0
-        var tt2 = 1
-        for(i= 0; i < 40; i++){
-          this.baseArrFill = [ 
-        {T1: `${this.UH[tt1]} - ${this.UH[tt2]}`, D1: this.uhml1[tt1], T2: `${this.UI[tt1]} - ${this.UI[tt2]}`, D2: this.ui1[tt1], T3: `${this.STR[tt1]} - ${this.STR[tt2]}`, D3: this.str1[tt1] }
-        ]
-        this.baseArr.push(this.baseArrFill)
-        tt1++
-        tt2++
-        }
-      console.log(this.baseArr);
+       
+    }
+  },
+
+  computed: {
+    isTableEmpty(){
+      return this.baseArr.length === 0;
     }
   }
 }
-
-
-  // <tbody>
-  //     <tr>
-  //       <td> {{ this.UH[0] + ' - ' + this.UH[1] }} </td>
-  //       <td>
-  //         {{ uhml1[0] }}
-  //       </td>
-  //       <td>3.0 - 10.9</td>                     
-  //       <td>
-  //         {{ ui1[0] }}
-  //       </td>
-  //       <td>70.0 - 70.9</td>                     
-  //       <td>{{ str1[0] }}</td> 
-  //       <td>17.0 - 17.9</td>                    
-  //       <td></td> 
-  //       <td>2.0</td>                    
-  //       <td></td> 
-  //       <td>11-1</td>                    
-  //       <td></td>                     
-  //     </tr>  
-  //     <tr>
-  //       <td>{{ this.UH[2] + ' - ' + this.UH[3] }}</td>
-  //       <td> {{uhml1[1]}} </td>
-  //       <td></td>                     
-  //       <td>{{ ui1[1] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[1] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                     
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[4] + ' - ' + this.UH[5] }}</td>
-  //       <td>{{uhml1[2]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[2] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[2] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                  
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[6] + ' - ' + this.UH[7] }}</td>
-  //       <td>{{uhml1[3]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[3] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[3] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //      <tr>
-  //       <td>{{ this.UH[8] + ' - ' + this.UH[9] }}</td>
-  //       <td>{{uhml1[4]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[4] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[4] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                   
-  //     </tr> 
-  //     <tr>
-  //       <td> {{ this.UH[10] + ' - ' + this.UH[11] }} </td>
-  //       <td>{{uhml1[5]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[5] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[5] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                        
-  //     </tr>  
-  //     <tr>
-  //       <td>{{ this.UH[12] + ' - ' + this.UH[13] }}</td>
-  //       <td>{{uhml1[6]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[6] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[6] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                  
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[14] + ' - ' + this.UH[15] }}</td>
-  //       <td>{{uhml1[7]}}</td>
-  //       <td></td>                     
-  //       <td>{{ ui1[7] }}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[7] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                  
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[16] + ' - ' + this.UH[17] }}</td>
-  //       <td>{{uhml1[8]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[8]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[8] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                
-  //     </tr> 
-  //      <tr>
-  //       <td>{{ this.UH[18] + ' - ' + this.UH[19] }}</td>
-  //       <td>{{uhml1[9]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[9]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[9] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                   
-  //     </tr> 
-  //     <tr>
-  //       <td> {{ this.UH[20] + ' - ' + this.UH[21] }} </td>
-  //       <td>{{uhml1[10]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[10]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[10] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                         
-  //     </tr>  
-  //     <tr>
-  //       <td>{{ this.UH[22] + ' - ' + this.UH[23] }}</td>
-  //       <td>{{uhml1[11]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[11]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[11] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[24] + ' - ' + this.UH[25] }}</td>
-  //       <td>{{uhml1[12]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[12]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[12] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                   
-  //     </tr>   
-  //      <tr>
-  //       <td>{{ this.UH[26] + ' - ' + this.UH[27] }}</td>
-  //       <td>{{uhml1[13]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[13]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[13] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                         
-  //     </tr> 
-  //      <tr>
-  //       <td>{{ this.UH[28] + ' - ' + this.UH[29] }}</td>
-  //       <td>{{uhml1[14]}}</td>
-  //       <td></td>                     
-  //       <td>{{ui1[14]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[14] }}</td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                       
-  //     </tr> 
-  //     <tr>
-  //       <td> {{ this.UH[30] + ' - ' + this.UH[31] }} </td>
-  //       <td>{{uhml1[15]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[15] }}</td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                           
-  //     </tr>  
-  //     <tr>
-  //       <td>{{ this.UH[32] + ' - ' + this.UH[33] }}</td>
-  //       <td>{{uhml1[16]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[16] }}</td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                 
-  //     </tr>    
-  //     <tr>
-  //       <td>{{ this.UH[34] + ' - LONGER'  }}</td>
-  //       <td>{{uhml1[17]}}</td>
-  //       <td></td>                     
-  //       <td>{{ str1[17] }}</td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr>   
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr>
-  //      <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr>
-  //      <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr> 
-  //     <tr>
-  //       <td></td>
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td>
-  //       <td></td>                     
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td> 
-  //       <td></td>                    
-  //       <td></td>                      
-  //     </tr>
-  //   </tbody>
 </script>
+
+<style scoped>
+  th, h1 {
+    position: sticky;
+    top: 0;
+  }
+</style>
 
 
