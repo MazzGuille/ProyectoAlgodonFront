@@ -5,6 +5,10 @@
       test recap
     </button>
     <br>
+    <button v-on:click="exportarExcel()">
+      exportar excel
+    </button>
+    <br>
      <button v-on:click="testeandolo()">
       sumatoria
     </button>
@@ -31,7 +35,20 @@
       </tr>
     </thead>
     <tbody >
-      
+      <tr v-for="(items, index) in baseArr" :key="index">
+        <td>{{items[0].T1}}</td>
+        <td>{{items[0].D1}}</td>
+        <td>{{items[0].T2}}</td>                     
+        <td>{{items[0].D2}}</td>
+        <td>{{items[0].T3}}</td>                     
+        <td>{{items[0].D3}}</td>
+        <td>{{items[0].T4}}</td>                     
+        <td>{{items[0].D4}}</td>
+        <td>{{items[0].T5}}</td>                     
+        <td>{{items[0].D5}}</td>
+        <td>{{items[0].T6}}</td>                     
+        <td>{{items[0].D6}}</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -39,6 +56,7 @@
 
 <script>
 import axios from 'axios';
+import exportXlsFile from "export-from-json"
 
 export default {
     data: () => ({
@@ -48,13 +66,17 @@ export default {
     STR: [17.0 , 17.9,	18.0 , 18.9,	19.0 , 19.9,	20.0 , 20.9,	21.0 , 21.9,	22.0 , 22.9,	23.0 , 23.9,	24.0 , 24.9,	25.0 , 25.9,	26.0 , 26.9,	27.0 , 27.9,	28.0 , 28.9,	29.0 , 29.9,	30.0, 99999],
     SFI: [3.0 ,10.9,	11.0 ,15.9,	16.0 , 20.9,	21.0 , 30],
     MIC: [2.0,	2.1,	2.2,	2.3,	2.4,	2.5,	2.6,	2.7,	2.8,	2.9,	3.0,	3.1,	3.2,	3.3,	3.4,	3.5,	3.6,	3.7,	3.8,	3.9,	4.0,	4.1,	4.2,	4.3,	4.4,	4.5,	4.6,	4.7,	4.8,	4.9,	5.0,	5.1,	5.2,	5.3,	5.4,	5.5,	5.6,	5.7],
-    CLR: [11-1,	11-2,	11-3,	11-4,	12-1,	12-2,	12-3,	12-4,	13-1,	13-2,	13-3,	13-4,	14-1,	14-2,	14-3,	14-4,	21-1,	21-2,	21-3,	21-4,	22-1,	22-2,	22-3,	22-4,	23-1,	23-2,	23-3,	23-4,	24-1,	24-2,	24-3,	24-4,	31-1,	31-2,	31-3,	31-4,	32-1,	32-2,	32-3,	32-4,	33-1,	33-2,	33-3,	33-4,	34-1,	34-2,	34-3,	34-4,	41-1,	41-2,	41-3,	41-4,	42-1,	42-2,	42-3,	42-4,	43-1,	43-2,	43-3,	43-4,	44-1,	44-2,	44-3,	44-4,	51-1,	51-2,	51-3,	51-4,	52-1,	52-2,	52-3,	52-4,	53-1,	53-2,	53-3,	53-4,	54-1,	54-2,	54-3,	54-4,	61-1,	61-2,	61-3,	61-4,	62-1,	62-2,	62-3,	62-4,	63-1,	63-2,	63-3,	63-4],
+    CLR: ['11-1',	'11-2',	'11-3',	'11-4',	'12-1',	'12-2',	'12-3',	'12-4',	'13-1',	'13-2',	'13-3',	'13-4',	'14-1',	'14-2',	'14-3',	'14-4',	'21-1',	'21-2',	'21-3',	'21-4',	'22-1',	'22-2',	'22-3',	'22-4',	'23-1',	'23-2',	'23-3',	'23-4',	'24-1',	'24-2',	'24-3',	'24-4',	'31-1',	'31-2',	'31-3',	'31-4',	'32-1',	'32-2',	'32-3',	'32-4',	'33-1',	'33-2',	'33-3',	'33-4',	'34-1',	'34-2',	'34-3',	'34-4',	'41-1',	'41-2',	'41-3',	'41-4',	'42-1',	'42-2',	'42-3',	'42-4',	'43-1',	'43-2',	'43-3',	'43-4',	'44-1',	'44-2',	'44-3',	'44-4',	'51-1',	'51-2',	'51-3',	'51-4',	'52-1',	'52-2',	'52-3',	'52-4',	'53-1',	'53-2',	'53-3',	'53-4',	'54-1',	'54-2',	'54-3',	'54-4',	'61-1',	'61-2',	'61-3',	'61-4',	'62-1',	'62-2',	'62-3',	'62-4',	'63-1',	'63-2',	'63-3',	'63-4'],
     TRSH: [1,	2,	3,	4,	5,	6,	7,	8, 9],
     baseArr: [],
-    uhml1: [],
-    ui1: [],
-    str1:[],
-    sumatoria: 0
+    uhmlTotal: [],
+    uiTotal: [],
+    strTotal:[],
+    sfiTotal:[],
+    micTotal:[],
+    clrTotal:[],
+    sumatoria: '',
+    agua: 'agua'
   }),
 
   methods: {
@@ -63,57 +85,120 @@ export default {
       axios.get('http://localhost:8000/api/Recap').then(res => { 
         this.hvi = res.data;  
        
-        var i;
+        var i;      
 
         var pos1 = 0;
         var pos2 = 1;
-         for(i = 0; i < this.UH.length; i++){             
+         for(i = 0; i < this.UH.length/2; i++){             
             let arr = this.hvi.filter((x) => {
              return x.uhml >= this.UH[pos1] && x.uhml <= this.UH[pos2]
             })
-            this.uhml1.push(arr.length)
+            this.uhmlTotal.push(arr.length)
             pos1+=2
             pos2+=2
         }
        
-       var pos3 = 0;
-       var pos4 = 1;
-        for(i = 0; i < this.UI.length; i++){             
+       var pos1 = 0;
+       var pos2 = 1;
+        for(i = 0; i < this.UI.length/2; i++){             
             let arr = this.hvi.filter((x) => {
-             return x.ui >= this.UI[pos3] && x.ui <= this.UI[pos4]
+             return x.ui >= this.UI[pos1] && x.ui <= this.UI[pos2]
             })
-            this.ui1.push(arr.length)            
-            pos3+=2
-            pos4+=2
+            this.uiTotal.push(arr.length)            
+            pos1+=2
+            pos2+=2
         }
 
-       var pos5 = 0;
-       var pos6 = 1;
-        for(i = 0; i < this.STR.length; i++){             
+       var pos1 = 0;
+       var pos2 = 1;
+        for(i = 0; i < this.STR.length/2; i++){             
             let arr = this.hvi.filter((x) => {
-             return x.strength >= this.STR[pos5] && x.strength <= this.STR[pos6]
+             return x.strength >= this.STR[pos1] && x.strength <= this.STR[pos2]
             })
-            this.str1.push(arr.length)
-            console.log(arr);
-            pos5+=2
-            pos6+=2
+            this.strTotal.push(arr.length)
+            pos1+=2
+            pos2+=2
         }
 
-        // let arr = this.hvi.filter((x) =>{
-        //  return x.uhml >= this.UH[10] && x.uhml <= this.UH[11]
-        // })
-        // this.uhml1 = arr.length        
+       var pos1 = 0;
+       var pos2 = 1;
+        for(i = 0; i < this.SFI.length/2; i++){             
+            let arr = this.hvi.filter((x) => {
+             return x.sfi >= this.SFI[pos1] && x.sfi <= this.SFI[pos2]
+            })
+            this.sfiTotal.push(arr.length)
+            pos1+=2
+            pos2+=2
+        }
 
-        // let arr2 = this.hvi.filter((x) => {
-        //   return x.ui >= 83.0 && x.ui <= 84.9
-        // })
-        // this.ui1 = arr2.length
+       var pos1 = 0;
+        for(i = 0; i < this.MIC.length; i++){             
+            let arr = this.hvi.filter((x) => {
+             return x.mic === this.MIC[pos1] 
+            })
+            this.micTotal.push(arr.length)
+            pos1++
+        }
+
+          var pos1 = 0;
+        for(i = 0; i < this.CLR.length; i++){             
+            let arr = this.hvi.filter((x) => {
+             return x.colorgrade === this.CLR[pos1] 
+            })
+            this.clrTotal.push(arr.length)
+            pos1++
+        }
+
+        var tt1 = 0
+        var tt2 = 1
+        var tt3 = 0
+        var dd = 0
+        for(i= 0; i < 92; i++){
+          let baseArrFill  = [ 
+          {
+           T1: `${this.UH[tt1]} - ${this.UH[tt2]}`, D1: this.uhmlTotal[dd],
+           T2: `${this.UI[tt1]} - ${this.UI[tt2]}`, D2: this.uiTotal[dd], 
+           T3: `${this.STR[tt1]} - ${this.STR[tt2]}`, D3: this.strTotal[dd],
+           T4: `${this.SFI[tt1]} - ${this.SFI[tt2]}`, D4: this.sfiTotal[dd], 
+           T5: this.MIC[tt3], D5: this.micTotal[dd], 
+           T6: this.CLR[tt3], D6: this.clrTotal[dd] 
+          }         
+          ]                  
+          this.baseArr.push(baseArrFill )
+          tt1+=2
+          tt2+=2
+          tt3++
+          dd++
+        }
+         if(this.UH[tt1] === 'undefined' || this.UH[tt2] === 'undefined'){
+            this.UH[tt1] = ''
+            this.UH[tt2] = ''
+          } 
+        console.log(this.micTotal);    
        });    
     },
 
+    exportarExcel(){
+      const data = this.baseArr
+      const FileName = 'descarga'
+      const exportType = exportXlsFile.types.xls
+      exportXlsFile({data, FileName, exportType})
+    },
+
     testeandolo(){
-      this.baseArr = [this.UH, this.UI, this.STR]
-      console.log(this.baseArr[0]);
+        this.baseArrFill = [{}]
+        var i;
+        var tt1 = 0
+        var tt2 = 1
+        for(i= 0; i < 40; i++){
+          this.baseArrFill = [ 
+        {T1: `${this.UH[tt1]} - ${this.UH[tt2]}`, D1: this.uhml1[tt1], T2: `${this.UI[tt1]} - ${this.UI[tt2]}`, D2: this.ui1[tt1], T3: `${this.STR[tt1]} - ${this.STR[tt2]}`, D3: this.str1[tt1] }
+        ]
+        this.baseArr.push(this.baseArrFill)
+        tt1++
+        tt2++
+        }
+      console.log(this.baseArr);
     }
   }
 }
