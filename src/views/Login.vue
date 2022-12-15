@@ -75,7 +75,7 @@ export default{
             }
             
             axios.post(url, data, config).then(res =>{
-                console.log(res);
+                //console.log(res);
                 if(res.status === 200){
                     alert('Login exitoso')
                     router.push("Upload")
