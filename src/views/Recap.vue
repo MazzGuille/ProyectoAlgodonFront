@@ -1,64 +1,60 @@
-<template>
-    <h1>recap</h1>
-    <br>
-    <button v-on:click="fillArray()">
-      test recap
-    </button>
-    <br>
-    <button v-on:click="exportarExcel()">
-      exportar excel
-    </button>
-    <br>
-     <button v-on:click="testeandolo()">
-      sumatoria
-    </button>
-    <br>
-    <div>
-      {{sumatoria}}
+<template>   
+    <div class="pb-10">
+      <div class="mt-3 w-full flex items-center justify-center">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-1.5 rounded" v-on:click="fillArray()">
+          Generar RECAP
+        </button>
+      </div>
+      <div v-show="excel" class="mt-3 w-full flex items-center justify-center">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-1.5 rounded" v-on:click="exportarExcel()">
+          Exportar a excel
+        </button>
+      </div>
+      <br>
+       <div class="flex items-start justify-center h-screen">
+      <table class="w-3/4 text-center">
+      <thead class=" bg-blue-600 font-semibold text-white pt-2 pb-2 sticky top-0">
+        <tr>
+          <th class="w-32">UHML</th>
+          <th class= "w-32"> TOTAL </th>
+          <th class="w-32">UI</th>
+          <th class= "w-32"> TOTAL </th>
+          <th class="w-32">Strength</th>
+          <th class= "w-32"> TOTAL </th>
+          <th class="w-32">SFI</th>
+          <th class= "w-32"> TOTAL </th>
+          <th class="w-32">Mic</th>
+          <th class= "w-32"> TOTAL </th>
+          <th class="w-32">ColorGrade</th>
+          <th class= "w-32"> TOTAL </th>
+        </tr>
+      </thead>
+      <tbody v-if="!isTableEmpty">
+        <tr v-for="(items, index) in baseArr" :key="index">
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T1}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D1}}</td>
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T2}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D2}}</td>
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T3}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D3}}</td>
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T4}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D4}}</td>
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T5}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D5}}</td>
+          <td class="bg-gray-300 text-black text-bold">{{items[0].T6}}</td>
+          <td class="bg-gray-200 text-black text-bold">{{items[0].D6}}</td>
+        </tr>
+      </tbody>
+      <div v-show="rendering" v-else class=" ml-auto mr-auto w-full h-full flex justify-center items-center">
+       <svg aria-hidden="true" class="w-20 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+       </svg>
+      </div>
+      </table>
+      
+      </div>
     </div>
-     <div class="flex items-start justify-center h-screen">
-    <table class="table w-3/4 text-center">   
-    <thead>
-      <tr>        
-        <th class="w-32">UHML</th>
-        <th class= "w-32"> TOTAL </th>
-        <th class="w-32">UI</th>
-        <th class= "w-32"> TOTAL </th>
-        <th class="w-32">Strength</th>
-        <th class= "w-32"> TOTAL </th>
-        <th class="w-32">SFI</th>
-        <th class= "w-32"> TOTAL </th>
-        <th class="w-32">Mic</th>
-        <th class= "w-32"> TOTAL </th>
-        <th class="w-32">ColorGrade</th>
-        <th class= "w-32"> TOTAL </th>
-      </tr>
-    </thead>
-    <tbody v-if="!isTableEmpty">
-      <tr v-for="(items, index) in baseArr" :key="index">
-        <td>{{items[0].T1}}</td>
-        <td>{{items[0].D1}}</td>
-        <td>{{items[0].T2}}</td>                     
-        <td>{{items[0].D2}}</td>
-        <td>{{items[0].T3}}</td>                     
-        <td>{{items[0].D3}}</td>
-        <td>{{items[0].T4}}</td>                     
-        <td>{{items[0].D4}}</td>
-        <td>{{items[0].T5}}</td>                     
-        <td>{{items[0].D5}}</td>
-        <td>{{items[0].T6}}</td>                     
-        <td>{{items[0].D6}}</td>
-      </tr>
-    </tbody>
-    <div v-show="rendering" v-else class=" ml-auto mr-auto w-full h-full flex justify-center items-center">
-     <svg aria-hidden="true" class="w-20 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-     </svg>
-    </div>
-    </table>
-    
-</div>
 </template>
 
 <script>
@@ -82,7 +78,7 @@ export default {
     micTotal:[],
     clrTotal:[],
     rendering: false,
-    agua: 'agua'
+    excel: false
   }),
 
   methods: {
@@ -189,19 +185,29 @@ export default {
           if(typeof this.sfiTotal[dd] === "undefined"){                       
             this.baseArr[tt3][0].T4 = ''
           }
+
+          if(this.baseArr[tt3][0].T1.includes('99999')){
+            this.baseArr[tt3][0].T1 = '1.36 - +'
+          }
+
+          if(this.baseArr[tt3][0].T2.includes('99999')){
+            this.baseArr[tt3][0].T2 = '83 - +'
+          }
+
+          if(this.baseArr[tt3][0].T3.includes('99999')){
+            this.baseArr[tt3][0].T3 = '30 - +'
+          }
+
           tt1+=2
           tt2+=2
           tt3++
           dd++
         }
         
-          
+         this.excel= true 
        });    
     },
-
-    testeandolo(){
-       
-    }
+    
   },
 
   computed: {
@@ -212,11 +218,5 @@ export default {
 }
 </script>
 
-<style scoped>
-  th, h1 {
-    position: sticky;
-    top: 0;
-  }
-</style>
 
 
