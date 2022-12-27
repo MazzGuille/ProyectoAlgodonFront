@@ -1,5 +1,5 @@
 <template>
-  <div v-if="respuesta">
+  <div v-show="respuesta">
     <div class="pt-3 w-full flex justify-center items-center">
       <h1 class="text-blue-600 font-bold">Importar HVI</h1>
       <button @click="logout()">DATOS USUARIO</button>
@@ -122,7 +122,7 @@
       </table>
     </div>
   </div>
-  <div class="min-h-screen w-full bg-blue-600 text-white font-extrabold flex justify-center items-center" v-else>
+  <div class="min-h-screen w-full bg-blue-600 text-white font-extrabold flex justify-center items-center" v-show="!respuesta">
     <p class=" text-4xl">
       PARA TENER ACCESO A LA APLICACION DEBES INICIAR SESION
     </p>
@@ -208,17 +208,19 @@ export default {
       });
     }, 
 
-    // datosUsuario(){      
-    // let url = 'http://localhost:8000/api/User/user' 
-    // let config = {
-    // headers:{'Content-Type': 'application/json'},
-    // withCredentials: true
+    logout(){
+    let url = 'http://localhost:8000/api/User/logout' 
+    let config = {
+      headers:{'Content-Type': 'application/json'},
+      withCredentials: true
+     }     
+   axios.post(url, config).then(res=>{
+    console.log(res);
+    // if(res.status === 200){
+    //   router.push("/")
     // }
-    //  this.probando = axios.get(url, config)
-    //  console.log(this.probando);
-    //  this.respuesta = true
-    // }
-   
+   })
+    },
   },   
 
   computed: {
@@ -231,11 +233,11 @@ export default {
 
     let respuesta = ref(false);
     onMounted( () =>{  
-    let url = 'http://localhost:8000/api/User/user' 
-    let config = {
-     headers:{'Content-Type': 'application/json'},
-     withCredentials: true
-    }
+      let url = 'http://localhost:8000/api/User/user' 
+      let config = {
+      headers:{'Content-Type': 'application/json'},
+      withCredentials: true
+     }
      axios.get(url, config).then(res =>{
       console.log(res);  
       if(res.status === 200){
@@ -245,26 +247,9 @@ export default {
      })     
     })
 
-    const logout = async () =>{
-    let url = 'http://localhost:8000/api/User/logout' 
-    let config = {
-     headers:{'Content-Type': 'application/json'},
-     withCredentials: true
-    }     
-   axios.post(url, config).then(res=>{
-    console.log(res);
-    // if(res.status === 200){
-    //   router.push("/")
-    // }
-   })
-  }
-
     return{
-      respuesta,
-      logout
+      respuesta,     
     } 
-  }
-
- 
+  } 
 };
 </script>
