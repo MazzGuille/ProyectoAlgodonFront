@@ -27,7 +27,7 @@
       "
     >
       <div class="">
-        <label class="cursor-pointer text-white font-semibold" for="import"
+        <label v-show="archivo" class="cursor-pointer text-white font-semibold" for="import"
           ><span
             class="bi bi-upload bg-blue-600 hover:bg-blue-700 p-2 rounded"
             data-mdb-ripple="true"
@@ -57,22 +57,37 @@
         "
       >
         <input v-model="FileName" type="text" class="hidden" id="xlsInput" />
-        <button
-          class="
-            cursor-pointer
-            text-white
-            font-semibold
-            bg-blue-600
-            hover:bg-blue-700
-            p-2
-            rounded
-          "
-          @click="HVIRecap()"
-        >
-          Enviar datos
-        </button>
+        
+          <button
+            class="
+              cursor-pointer
+              text-white
+              font-semibold
+              bg-blue-600
+              hover:bg-blue-700
+              p-2
+              rounded
+            "
+            @click="HVIRecap()"
+          >
+            Enviar datos
+          </button >        
+        
       </div>
     </div>
+     <div v-if="recapLink" class=" mx-auto w-1/3 flex justify-center items-center">
+            <button  class="
+                cursor-pointer
+                text-white
+                font-semibold
+                bg-blue-600
+                hover:bg-blue-700
+                p-2
+                rounded
+              ">
+               <router-link :to="{ name: 'Recap' }">Ir a RECAP</router-link>
+            </button>
+          </div>
     <div class="text-center flex items-start justify-center h-screen">
       <table class="mt-5 w-3/4">
         <thead class="bg-blue-600 text-white pt-2 pb-2 sticky top-0">
@@ -163,6 +178,8 @@ export default {
     recap: false,
     rendering: false,
     isLoading: false,
+    recapLink: false,
+    archivo: true
   }),
 
   methods: {
@@ -233,6 +250,9 @@ export default {
       console.error(error)
     }      
     this.isLoading = false;
+    this.recapLink = true;
+    this.recap = false;
+    this.archivo = false
     },
 
     // datosUsuario(){
