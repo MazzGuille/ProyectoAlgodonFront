@@ -69,7 +69,7 @@
           "
           @click="HVIRecap()"
         >
-          Obtener Recap
+          Enviar datos
         </button>
       </div>
     </div>
