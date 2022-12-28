@@ -1,7 +1,7 @@
 <template>
   <div v-if="respuesta">
     <div class="pt-3 w-full flex justify-center items-center">
-      <h1 class="text-blue-600 font-bold">Importar HVI</h1>
+      <h1 class="text-blue-600 font-semibold">Importar HVI</h1>
       <!-- <button @click="logout()">DATOS USUARIO</button> -->
     </div>
     <div v-if="isLoading" class=" mx-auto h-18 w-96">
