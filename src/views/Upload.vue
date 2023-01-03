@@ -94,7 +94,7 @@
             p-2
             rounded
           "
-          @click="HVIRecap()"
+          @click="HVIRecap(), hvirecap2(), hvirecap3(), hvirecap4()"
         >
           Enviar datos
         </button>
@@ -203,6 +203,11 @@ import { onMounted, ref } from "vue";
 export default {
   data: () => ({
     items: [],
+    items2: [],
+    items3: [],
+    items4: [],
+    items5: [],
+    itemsJson: [{}],
     FileName: "",
     datos: false,
     recap: false,
@@ -255,34 +260,93 @@ export default {
               return { UHML, UI, STRENGTH, SFI, MIC, COLORGRADE, TRASHID };
             });
             self.items = restX2;
+            self.items2 = self.items.slice(0,150)
+            self.items3 = self.items.slice(151,300)
+            self.items4 = self.items.slice(301,450)
+            self.items5 = self.items.slice(451,603)
+            this.itemsJson = JSON.stringify(this.items)
             console.log(self.items);
           });
         };
         this.recap = true;
+        console.log(`The JSON looks like this: ${this.itemsJson}`)
       }
     },
 
     async HVIRecap() {
       let self = this;
       let jsons = {
-        HVIList: self.items,
-        Title: self.FileName,
-      };
+        HVIList: self.items2
+      };       
+       
       this.isLoading = true;
       this.archivo = false;
       this.recap = false;
+
       try {
-        await axios.post("http://localhost:8000/api/HVI", jsons).then((res) => {
+        await axios.post("http://localhost:8000/api/HVI/hvi1", jsons).then((res) => {
           console.log(res);
-          if (res.status === 200) alert("Se enviaron los datos correctamente.");
-          this.HVIList = [];
+          if (res.status === 200) alert("Se enviaron los datos correctamente 1.");
+          //this.HVIList = [];
           // router.push("/recap");
         });
       } catch (error) {
         console.error(error);
       }
+
       this.isLoading = false;
       this.recapLink = true;
+    },
+
+    async hvirecap2(){
+         let jsons2 = {
+        HVIList: self.items3
+      };
+
+      try {
+        await axios.post("http://localhost:8000/api/HVI/hvi2", jsons2).then((res) => {
+          console.log(res);
+          //if (res.status === 200) alert("Se enviaron los datos correctamente 2.");
+          //this.HVIList = [];
+          // router.push("/recap");
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+        async hvirecap3(){
+         let jsons3 = {
+        HVIList: self.items4
+      };
+
+      try {
+        await axios.post("http://localhost:8000/api/HVI/hvi3", jsons3).then((res) => {
+          console.log(res);
+          //if (res.status === 200) alert("Se enviaron los datos correctamente 2.");
+          //this.HVIList = [];
+          // router.push("/recap");
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+        async hvirecap4(){
+         let jsons4 = {
+        HVIList: self.items5
+      };
+
+      try {
+        await axios.post("http://localhost:8000/api/HVI/hvi4", jsons4).then((res) => {
+          console.log(res);
+          //if (res.status === 200) alert("Se enviaron los datos correctamente 2.");
+          //this.HVIList = [];
+          // router.push("/recap");
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     // datosUsuario(){
